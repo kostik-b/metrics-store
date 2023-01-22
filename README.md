@@ -47,7 +47,7 @@ An example of a GET response is:
 
 # Compiling
 In order to compile the solution, please run make in the root directory of this repository.
-The binary file `metrics-store` will be placed in a newly created bin directory under project's root directory.
+The binary file `metrics-store` will be placed in a newly created `bin` directory under project's root directory.
 
 # Running
 The `metrics-store` server can be run with the following parameters:

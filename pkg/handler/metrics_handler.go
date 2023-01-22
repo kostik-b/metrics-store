@@ -45,8 +45,8 @@ func (m *metricsHandler) ServeHTTP(responseWriter http.ResponseWriter, request *
   } else {
     if (m.Debug) {
       log.Printf("Received unknown request method: %s\n", request.Method)
-      errorResponseMethodNotAllowed (responseWriter)
     }
+    errorResponseMethodNotAllowed (responseWriter)
   }
 }
 
@@ -78,6 +78,7 @@ func (m *metricsHandler) handleGetRequest(responseWriter http.ResponseWriter, re
 
       if err != nil {
         log.Printf("ERROR: GET - could not write response: %s\n", err.Error())
+        // although there is not guarantee that this call will succeed, we will try this anyway
         http.Error(responseWriter, "Error writing response", http.StatusInternalServerError)
       }
     }
@@ -144,13 +145,13 @@ func (m *metricsHandler) handlePostRequest(responseWriter http.ResponseWriter, r
 
     // if there is still an error, just return 500 regardless of error type
     if rc != datastore.Success {
-      log.Printf("ERROR: POST - could not add entry to the datastore: %s\n", rc.String())
+      log.Printf("ERROR: POST - could not add entry to the datastore: error - %s, key - %s, value - %#v\n", rc.String(), machineMetrics.ID, machineMetrics)
       http.Error(responseWriter, "Internal Server Error", http.StatusInternalServerError)
       return
     }
   } else if rc != datastore.Success {
     // if it's any other error, just return 500
-    log.Printf("ERROR: POST - could not add entry to the datastore: %s\n", rc.String())
+    log.Printf("ERROR: POST - could not add entry to the datastore: error - %s, key - %s, value - %#v\n", rc.String(), machineMetrics.ID, machineMetrics)
     http.Error(responseWriter, "Internal Server Error", http.StatusInternalServerError)
     return
   }

@@ -29,7 +29,7 @@ type DatastoreTestSuite struct {
 }
 
 // this "hack" will be run before each test to clear the map
-func (suite *DatastoreTestSuite) SetupTest() {
+func (s *DatastoreTestSuite) SetupTest() {
   GetInstance() // to make sure the map had been created
 
   for k := range metricsStore.entryMap {
@@ -37,63 +37,63 @@ func (suite *DatastoreTestSuite) SetupTest() {
   }
 }
 
-func (suite *DatastoreTestSuite) Test_AddEntryWithEmptyKey_ReturnsKeyNotSpecifiedError() {
+func (s *DatastoreTestSuite) Test_AddEntryWithEmptyKey_ReturnsKeyNotSpecifiedError() {
   datastore := GetInstance()
 
   err := datastore.AddEntry("", &dummyMachineMetrics)
 
-  assert.Equal(suite.T(), err, ErrorKeyNotSpecified, "Error should be " + ErrorKeyNotSpecified.String())
+  assert.Equal(s.T(), err, ErrorKeyNotSpecified, "Error should be " + ErrorKeyNotSpecified.String())
 }
 
-func (suite *DatastoreTestSuite) Test_AddEntryWithNilValue_ReturnsValueNotSpecifiedError() {
+func (s *DatastoreTestSuite) Test_AddEntryWithNilValue_ReturnsValueNotSpecifiedError() {
   datastore := GetInstance()
 
   err := datastore.AddEntry("dummyKey", nil)
 
-  assert.Equal(suite.T(), err, ErrorValueNotSpecified, "Error should be " + ErrorValueNotSpecified.String())
+  assert.Equal(s.T(), err, ErrorValueNotSpecified, "Error should be " + ErrorValueNotSpecified.String())
 }
 
-func (suite *DatastoreTestSuite) Test_AddEntryWithExistingKey_ReturnsKeyExistsError() {
+func (s *DatastoreTestSuite) Test_AddEntryWithExistingKey_ReturnsKeyExistsError() {
   datastore := GetInstance()
 
   datastore.AddEntry("dummyKey", &dummyMachineMetrics)
   err := datastore.AddEntry("dummyKey", &dummyMachineMetrics)
 
-  assert.Equal(suite.T(), err, ErrorKeyExists, "Error should be " + ErrorKeyExists.String())
+  assert.Equal(s.T(), err, ErrorKeyExists, "Error should be " + ErrorKeyExists.String())
 }
 
-func (suite *DatastoreTestSuite) Test_AddEntryWithNonExistingKeyNonNilvalue_ReturnsSuccess() {
+func (s *DatastoreTestSuite) Test_AddEntryWithNonExistingKeyNonNilvalue_ReturnsSuccess() {
   datastore := GetInstance()
 
   err := datastore.AddEntry("dummyKey", &dummyMachineMetrics)
 
-  assert.Equal(suite.T(), err, Success, "ReturnCode should be " + Success.String())
+  assert.Equal(s.T(), err, Success, "ReturnCode should be " + Success.String())
 }
 
-func (suite *DatastoreTestSuite) Test_GetAllEntries_MapEmpty_ReturnsEmptySlice() {
+func (s *DatastoreTestSuite) Test_GetAllEntries_MapEmpty_ReturnsEmptySlice() {
   datastore := GetInstance()
 
   allEntries := datastore.GetAllEntries()
 
   emptySlice := []*model.MachineMetrics {}
 
-  assert.Equal(suite.T(), allEntries, emptySlice, "Empty slice should be returned")
+  assert.Equal(s.T(), allEntries, emptySlice, "Empty slice should be returned")
 }
 
-func (suite *DatastoreTestSuite) Test_GetAllEntriesMapContainsOneEntry_ReturnsSliceWithiSameOneEntry() {
+func (s *DatastoreTestSuite) Test_GetAllEntriesMapContainsOneEntry_ReturnsSliceWithiSameOneEntry() {
   datastore := GetInstance()
 
   err := datastore.AddEntry("dummyKey", &dummyMachineMetrics)
-  assert.Equal(suite.T(), err, Success, "Return Code should be " + Success.String())
+  assert.Equal(s.T(), err, Success, "Return Code should be " + Success.String())
 
   allEntries := datastore.GetAllEntries()
 
-  assert.Equal(suite.T(), len(allEntries), 1, "Slice should contain one entry")
+  assert.Equal(s.T(), len(allEntries), 1, "Slice should contain one entry")
 
-  assert.EqualValues(suite.T(), &dummyMachineMetrics, allEntries[0], "Actual values of MachineMetries do not match the expected ones")
+  assert.EqualValues(s.T(), &dummyMachineMetrics, allEntries[0], "Actual values of MachineMetries do not match the expected ones")
 }
 
-func (suite *DatastoreTestSuite) Test_GetAllEntriesMapContainsThreeEntries_ReturnsSliceWithSameThreeElements() {
+func (s *DatastoreTestSuite) Test_GetAllEntriesMapContainsThreeEntries_ReturnsSliceWithSameThreeElements() {
   datastore := GetInstance()
 
   duplicate1 := dummyMachineMetrics
@@ -103,17 +103,17 @@ func (suite *DatastoreTestSuite) Test_GetAllEntriesMapContainsThreeEntries_Retur
   duplicate2.ID = "test-2"
 
   err := datastore.AddEntry("dummyKey", &dummyMachineMetrics)
-  assert.Equal(suite.T(), err, Success, "Return Code should be " + Success.String())
+  assert.Equal(s.T(), err, Success, "Return Code should be " + Success.String())
 
   err = datastore.AddEntry("dummyKey1", &duplicate1)
-  assert.Equal(suite.T(), err, Success, "Return Code should be " + Success.String())
+  assert.Equal(s.T(), err, Success, "Return Code should be " + Success.String())
 
   err = datastore.AddEntry("dummyKey2", &duplicate2)
-  assert.Equal(suite.T(), err, Success, "Return Code should be " + Success.String())
+  assert.Equal(s.T(), err, Success, "Return Code should be " + Success.String())
 
   allEntries := datastore.GetAllEntries()
 
-  assert.Equal(suite.T(), len(allEntries), 3, "Slice should contain three entries")
+  assert.Equal(s.T(), len(allEntries), 3, "Slice should contain three entries")
 
   var expectedSlice []*model.MachineMetrics
 
@@ -121,24 +121,24 @@ func (suite *DatastoreTestSuite) Test_GetAllEntriesMapContainsThreeEntries_Retur
   expectedSlice = append(expectedSlice, &duplicate1)
   expectedSlice = append(expectedSlice, &duplicate2)
 
-  assert.ElementsMatch(suite.T(), expectedSlice, allEntries, "slices do not match")
+  assert.ElementsMatch(s.T(), expectedSlice, allEntries, "slices do not match")
 }
 
-func (suite *DatastoreTestSuite) Test_GetInstance_EntryMapIsSet() {
+func (s *DatastoreTestSuite) Test_GetInstance_EntryMapIsSet() {
   datastore := GetInstance()
 
   impl, ok := datastore.(*datastoreAsMap)
 
-  assert.True(suite.T(), ok, "Could not cast datastore interface to datastoreAsMap")
+  assert.True(s.T(), ok, "Could not cast datastore interface to datastoreAsMap")
 
-  assert.NotNil(suite.T(), impl.entryMap, "datastoreAsMap.entryMap should have been initialized")
+  assert.NotNil(s.T(), impl.entryMap, "datastoreAsMap.entryMap should have been initialized")
 }
 
-func (suite *DatastoreTestSuite) Test_GetInstanceTwice_HaveSameAddress() {
+func (s *DatastoreTestSuite) Test_GetInstanceTwice_HaveSameAddress() {
   datastore  := GetInstance()
   datastore2 := GetInstance()
 
-  assert.Same(suite.T(), datastore, datastore2, "GetInstance should return the same object")
+  assert.Same(s.T(), datastore, datastore2, "GetInstance should return the same object")
 }
 
 func TestDatastoreTestSuite(t *testing.T) {
