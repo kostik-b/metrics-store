@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "machineId": {
+      "type": "integer"
+    },
+    "stats": {
+      "type": "object",
+      "properties": {
+        "cpuTemp": {
+          "type": "string"
+        },
+        "fanSpeed": {
+          "type": "integer"
+        },
+        "HDDSpace": {
+          "type": "integer"
+        },
+        "internalTemp": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "cpuTemp",
+        "fanSpeed",
+        "HDDSpace"
+      ]
+    },
+    "lastLoggedIn": {
+      "type": "string"
+    },
+    "sysTime": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "machineId",
+    "stats",
+    "lastLoggedIn",
+    "sysTime"
+  ]
+}
