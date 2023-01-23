@@ -5,6 +5,9 @@ import (
 	"sync"
 )
 
+// this is needed to init datastoreAsMap.entries in a thread safe way
+var once sync.Once
+
 // datastoreAsMap implementes DatastoreInterface
 type datastoreAsMap struct {
 	entries map[string]*model.MachineMetrics
@@ -16,9 +19,9 @@ type datastoreAsMap struct {
 var metricsStore datastoreAsMap
 
 func GetInstance() DatastoreInterface {
-	if metricsStore.entries == nil {
+	once.Do(func() {
 		metricsStore.entries = make(map[string]*model.MachineMetrics)
-	}
+	})
 
 	return &metricsStore
 }
