@@ -79,6 +79,10 @@ func (m *metricsHandler) handleGetRequest(responseWriter http.ResponseWriter, re
 			if err != nil {
 				log.Printf("ERROR: GET - could not write response: %s\n", err.Error())
 				http.Error(responseWriter, "Error writing response", http.StatusInternalServerError)
+			} else {
+				if m.Debug {
+					log.Printf("GET - sending response: %v\n", string(allEntriesAsBytes))
+				}
 			}
 		}
 	}
