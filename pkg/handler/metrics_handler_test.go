@@ -110,7 +110,6 @@ func (s *MetricsHandlerTestSuite) Test_GET_EmptyDatastore_ReturnsEmptyJSONArray(
 	// inspect call to response writer - should contain empty array
 	jsonEmptyString := "[]"
 	s.respWriterMock.AssertCalled(s.T(), "Write", []byte(jsonEmptyString))
-	s.respWriterMock.AssertCalled(s.T(), "WriteHeader", http.StatusOK)
 
 	contentType := s.respWriterMock.responseHeader.Get("Content-Type")
 	assert.Equal(s.T(), contentType, "application/json", "Content type is incorrect")
@@ -152,7 +151,6 @@ func (s *MetricsHandlerTestSuite) Test_GET_OneElementInDatastore_ReturnsOneEleme
 
 	// inspect call to response writer - should contain the expected string
 	s.respWriterMock.AssertCalled(s.T(), "Write", []byte(expectedJSON))
-	s.respWriterMock.AssertCalled(s.T(), "WriteHeader", http.StatusOK)
 
 	contentType := s.respWriterMock.responseHeader.Get("Content-Type")
 	assert.Equal(s.T(), contentType, "application/json", "Content type is incorrect")
@@ -226,7 +224,6 @@ func (s *MetricsHandlerTestSuite) Test_GET_ThreeElementsInDatastore_ReturnsThree
 
 	// inspect call to response writer
 	s.respWriterMock.AssertCalled(s.T(), "Write", []byte(expectedJSON))
-	s.respWriterMock.AssertCalled(s.T(), "WriteHeader", http.StatusOK)
 
 	contentType := s.respWriterMock.responseHeader.Get("Content-Type")
 	assert.Equal(s.T(), contentType, "application/json", "Content type is incorrect")

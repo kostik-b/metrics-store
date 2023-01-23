@@ -66,19 +66,18 @@ func (m *metricsHandler) handleGetRequest(responseWriter http.ResponseWriter, re
 		log.Println("ERROR: GET - could not get entries from the datastore")
 		http.Error(responseWriter, "Internal Server Error", http.StatusInternalServerError)
 	} else {
-		responseWriter.Header().Set("Content-Type", "application/json")
-		responseWriter.WriteHeader(http.StatusOK)
-
 		allEntriesAsBytes, err := json.MarshalIndent(allEntries, "", "  ") // for easier readability
 		if err != nil {
 			log.Printf("ERROR: GET - could not marshal entries as a byte array: %s\n", err.Error())
 			http.Error(responseWriter, "Error marshalling entries", http.StatusInternalServerError)
 		} else {
+			responseWriter.Header().Set("Content-Type", "application/json")
+
+			// the 200 header will be set automatically
 			_, err := responseWriter.Write(allEntriesAsBytes)
 
 			if err != nil {
 				log.Printf("ERROR: GET - could not write response: %s\n", err.Error())
-				// although there is not guarantee that this call will succeed, we will try this anyway
 				http.Error(responseWriter, "Error writing response", http.StatusInternalServerError)
 			}
 		}
@@ -169,11 +168,18 @@ func (m *metricsHandler) handlePostRequest(responseWriter http.ResponseWriter, r
 	responseAsBytes, err := json.MarshalIndent(response, "", "  ") // for readability
 	if err != nil {
 		// log the error but still send the response
-		log.Printf("ERROR: POST - could not marshal 201 response with id %s.\nError is %s\n", machineMetrics.ID, err.Error())
+		log.Printf("ERROR: POST - could not marshal 201 JSON response with id %s.\nError is %s\n", machineMetrics.ID, err.Error())
 	}
-	responseWriter.Write(responseAsBytes)
+	_, err = responseWriter.Write(responseAsBytes)
 
-	if m.Debug {
-		log.Printf("POST - sending response: %v\n", string(responseAsBytes))
+	// we still need to send 201 back to the client to indicate
+	// that an entry had been written to the DB
+	if err != nil {
+		log.Printf("ERROR: GET - could not write response: %s, but sending 201 anyways\n", err.Error())
+	} else {
+		if m.Debug {
+			log.Printf("POST - sending response: %v\n", string(responseAsBytes))
+		}
 	}
+
 }

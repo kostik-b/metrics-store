@@ -80,3 +80,4 @@ The route for `metrics-store` is `/metrics`, i.e. `http://localhost:4000/metrics
 * An option can be added to bind to a particular interface
 * Unit tests for metrics handler can be cleaned up - mocks can be moved to a separate file
 * defaultMaxBodySize constant can be moved to a separate file and then used by both main.go and unit tests for metrics handler
+* Wait interval during graceful shutdown, shutdownTimeout, can be made configurable
