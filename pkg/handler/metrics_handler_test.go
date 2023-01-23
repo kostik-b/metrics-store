@@ -52,7 +52,6 @@ func (d *datastoreMock) AddEntry(key string, value *model.MachineMetrics) ds.Dat
 }
 
 // implements http.ResponseWriter interface
-
 type responseWriterMock struct {
 	mock.Mock
 
@@ -83,7 +82,6 @@ type MetricsHandlerTestSuite struct {
 	respWriterMock *responseWriterMock
 }
 
-// this "hack" will be run before each test to clear the header map
 func (s *MetricsHandlerTestSuite) SetupTest() {
 	s.dstoreMock = new(datastoreMock)
 	s.respWriterMock = new(responseWriterMock)

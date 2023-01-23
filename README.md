@@ -10,7 +10,7 @@ An example of a JSON object for POST request is:
 {
     "machineId": 61616,
     "stats": {
-        "cpuTemp": "78c",
+        "cpuTemp": 78,
         "fanSpeed": 500,
         "HDDSpace": 100,
         "internalTemp": 23
@@ -20,7 +20,7 @@ An example of a JSON object for POST request is:
 }
 ```
 ### GET Requests
-A GET request will return the above JSON objects as an array with the addition of extra field - id, which is a unique id of that particular report.
+A GET request will return the above JSON objects as an array with the addition of an extra field - id, which is a unique id of that particular report.
 The JSON Schema for GET responses can be found in the schemas folder.
 An example of a GET response is:
 ```
@@ -50,7 +50,7 @@ In order to compile the solution, please run make in the root directory of this 
 The binary file `metrics-store` will be placed in a newly created `bin` directory under project's root directory.
 
 # Running
-The `metrics-store` server can be run with the following parameters:
+The `metrics-store` server can be run with the following parameters (these are also shown when `-h` argument is passed to the application):
 ```
 Usage of metrics-store:
   -allow-unkwnown-fields
@@ -79,3 +79,4 @@ The route for `metrics-store` is `/metrics`, i.e. `http://localhost:4000/metrics
 * Datastore as map can be moved into a separate directory under the directory it is currently in.
 * An option can be added to bind to a particular interface
 * Unit tests for metrics handler can be cleaned up - mocks can be moved to a separate file
+* defaultMaxBodySize constant can be moved to a separate file and then used by both main.go and unit tests for metrics handler

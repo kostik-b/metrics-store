@@ -36,7 +36,7 @@ func main() {
 	flag.Int64Var(&maxRequestBodySize, "max-request-body-size", maxRequestBodySize, "Maximum size of request body")
 
 	var allowUnknownFields bool
-	flag.BoolVar(&allowUnknownFields, "allow-unkwnown-fields", false, "Set to true to allow unknown fields")
+	flag.BoolVar(&allowUnknownFields, "allow-unknown-fields", false, "Set to true to allow unknown fields")
 
 	flag.Parse()
 
