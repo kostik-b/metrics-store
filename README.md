@@ -77,4 +77,3 @@ The route for `metrics-store` is `/metrics`, i.e. `http://localhost:4000/metrics
 * Implement a custom type with MarshalJSON and UnmarshalJSON to parse sysTime field
 * MarshalIndent can be turned on and off depending on whether we are in debug mode or not in the MetricsHandler
 * Comments can be improved
-* A software license needs to be established
