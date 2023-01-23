@@ -156,7 +156,7 @@ func (s *MetricsHandlerTestSuite) Test_GET_OneElementInDatastore_ReturnsOneEleme
 	assert.Equal(s.T(), contentType, "application/json", "Content type is incorrect")
 }
 
-func (s *MetricsHandlerTestSuite) Test_GET_ThreeElementsInDatastore_ReturnsThreeElementsJSONArray() {
+func (s *MetricsHandlerTestSuite) Test_GET_ThreeElementsInDatastore_ReturnsThreeElementsJSONArrayOptionalFieldExcluded() {
 	expectedJSON :=
 		`[
   {
@@ -189,8 +189,7 @@ func (s *MetricsHandlerTestSuite) Test_GET_ThreeElementsInDatastore_ReturnsThree
     "stats": {
       "cpuTemp": 456,
       "fanSpeed": 789,
-      "HDDSpace": 987,
-      "internalTemp": 765
+      "HDDSpace": 987
     },
     "lastLoggedIn": "userA",
     "sysTime": "timestamp"
@@ -203,6 +202,7 @@ func (s *MetricsHandlerTestSuite) Test_GET_ThreeElementsInDatastore_ReturnsThree
 
 	duplicate2 := dummyMachineMetrics
 	duplicate2.ID = "test-2"
+	duplicate2.Stats.InternalTemp = nil
 
 	machineMetrics := []*model.MachineMetrics{}
 	machineMetrics = append(machineMetrics, &dummyMachineMetrics)

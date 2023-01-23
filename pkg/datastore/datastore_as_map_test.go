@@ -80,7 +80,7 @@ func (s *DatastoreTestSuite) Test_GetAllEntries_MapEmpty_ReturnsEmptySlice() {
 	assert.Equal(s.T(), allEntries, emptySlice, "Empty slice should be returned")
 }
 
-func (s *DatastoreTestSuite) Test_GetAllEntriesMapContainsOneEntry_ReturnsSliceWithiSameOneEntry() {
+func (s *DatastoreTestSuite) Test_GetAllEntries_MapContainsOneEntry_ReturnsSliceWithSameOneEntry() {
 	datastore := GetInstance()
 
 	err := datastore.AddEntry("dummyKey", &dummyMachineMetrics)
@@ -93,7 +93,7 @@ func (s *DatastoreTestSuite) Test_GetAllEntriesMapContainsOneEntry_ReturnsSliceW
 	assert.EqualValues(s.T(), &dummyMachineMetrics, allEntries[0], "Actual values of MachineMetries do not match the expected ones")
 }
 
-func (s *DatastoreTestSuite) Test_GetAllEntriesMapContainsThreeEntries_ReturnsSliceWithSameThreeElements() {
+func (s *DatastoreTestSuite) Test_GetAllEntries_MapContainsThreeEntries_ReturnsSliceWithSameThreeElements() {
 	datastore := GetInstance()
 
 	duplicate1 := dummyMachineMetrics
@@ -121,7 +121,7 @@ func (s *DatastoreTestSuite) Test_GetAllEntriesMapContainsThreeEntries_ReturnsSl
 	expectedSlice = append(expectedSlice, &duplicate1)
 	expectedSlice = append(expectedSlice, &duplicate2)
 
-	assert.ElementsMatch(s.T(), expectedSlice, allEntries, "slices do not match")
+	assert.ElementsMatch(s.T(), expectedSlice, allEntries, "Returned entries do not match the ones that were passed in")
 }
 
 func (s *DatastoreTestSuite) Test_GetInstance_EntryMapIsSet() {
