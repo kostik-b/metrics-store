@@ -53,7 +53,7 @@ The binary file `metrics-store` will be placed in a newly created `bin` director
 The `metrics-store` server can be run with the following parameters (these are also shown when `-h` argument is passed to the application):
 ```
 Usage of metrics-store:
-  -allow-unkwnown-fields
+  -allow-unknown-fields
         Set to true to allow unknown fields
   -debug
         Set to true to enable debug output
