@@ -67,8 +67,6 @@ func (r *responseWriterMock) Header() http.Header {
 }
 
 func (r *responseWriterMock) Write(msg []byte) (int, error) {
-	fmt.Printf("write is: %s\n", string(msg))
-
 	r.writeArgument = string(msg)
 
 	args := r.Called(msg)

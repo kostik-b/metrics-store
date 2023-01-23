@@ -32,8 +32,8 @@ type DatastoreTestSuite struct {
 func (s *DatastoreTestSuite) SetupTest() {
 	GetInstance() // to make sure the map had been created
 
-	for k := range metricsStore.entryMap {
-		delete(metricsStore.entryMap, k)
+	for k := range metricsStore.entries {
+		delete(metricsStore.entries, k)
 	}
 }
 
@@ -131,7 +131,7 @@ func (s *DatastoreTestSuite) Test_GetInstance_EntryMapIsSet() {
 
 	assert.True(s.T(), ok, "Could not cast datastore interface to datastoreAsMap")
 
-	assert.NotNil(s.T(), impl.entryMap, "datastoreAsMap.entryMap should have been initialized")
+	assert.NotNil(s.T(), impl.entries, "datastoreAsMap.entries should have been initialized")
 }
 
 func (s *DatastoreTestSuite) Test_GetInstanceTwice_HaveSameAddress() {

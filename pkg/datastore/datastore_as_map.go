@@ -7,8 +7,8 @@ import (
 
 // datastoreAsMap implementes DatastoreInterface
 type datastoreAsMap struct {
-	entryMap map[string]*model.MachineMetrics
-	mutex    sync.Mutex // we need this for concurrent access
+	entries map[string]*model.MachineMetrics
+	mutex   sync.Mutex // we need this for concurrent access
 }
 
 // datastore as map is a singleton and can only be retrieved
@@ -16,8 +16,8 @@ type datastoreAsMap struct {
 var metricsStore datastoreAsMap
 
 func GetInstance() DatastoreInterface {
-	if metricsStore.entryMap == nil {
-		metricsStore.entryMap = make(map[string]*model.MachineMetrics)
+	if metricsStore.entries == nil {
+		metricsStore.entries = make(map[string]*model.MachineMetrics)
 	}
 
 	return &metricsStore
@@ -30,7 +30,7 @@ func (d *datastoreAsMap) GetAllEntries() []*model.MachineMetrics {
 	defer d.mutex.Unlock()
 
 	allEntries := []*model.MachineMetrics{}
-	for _, v := range d.entryMap {
+	for _, v := range d.entries {
 		allEntries = append(allEntries, v)
 	}
 
@@ -51,12 +51,12 @@ func (d *datastoreAsMap) AddEntry(key string, entry *model.MachineMetrics) Datas
 	defer d.mutex.Unlock()
 
 	// check if such entry exists
-	_, found := d.entryMap[key]
+	_, found := d.entries[key]
 	if found {
 		return ErrorKeyExists
 	}
 
-	d.entryMap[key] = entry
+	d.entries[key] = entry
 
 	return Success
 }

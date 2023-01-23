@@ -69,11 +69,13 @@ The route for `metrics-store` is `/metrics`, i.e. `http://localhost:4000/metrics
 * Patterns can be added to fetch specific metric entries, e.g. /metrics/<datetime>
 * If the database grows big, compression or chunking strategies can be considered for the GET response in addition to the range selection logic.
 * Some strategies need to be considered for archiving, relocating or removing data if the database gets too big.
-* Potentially improve error handling of unmarshalling for handling POST request, e.g. by implementing recommendations from https://www.alexedwards.net/blog/how-to-properly-parse-a-json-request-body,
-  as currently any internal server error will be handled as "Bad Request"
+* Potentially improve error handling of unmarshalling for handling POST request, e.g. by implementing recommendations from https://www.alexedwards.net/blog/how-to-properly-parse-a-json-request-body, as currently e.g. any error occuring during umarshalling will result in "Bad Request"
 * Produce swagger for the metrics-store
 * Optimise concurrent access for datastore as map
-* Create distinct loggers in metrics handler - for info, error and debug levels, each with its own prefix
+* Create distinct loggers in metrics handler - for info, error and debug levels, each with its own prefix, or create different log levels
 * Implement a custom type with MarshalJSON and UnmarshalJSON to parse sysTime field
-* MarshalIndent can be turned on and off depending on whether we are in debug mode or not in the MetricsHandler
+* MarshalIndent can be turned on and off depending on whether we are in debug mode or not in the MetricsHandler to save bandwidth
 * Comments can be improved
+* Datastore as map can be moved into a separate directory under the directory it is currently in.
+* An option can be added to bind to a particular interface
+* Unit tests for metrics handler can be cleaned up - mocks can be moved to a separate file
