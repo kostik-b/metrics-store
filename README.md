@@ -19,6 +19,13 @@ An example of a JSON object for POST request is:
     "sysTime": "Wed 2021-07-28 14:16:27"
 }
 ```
+An example of a response in case of a successful request is:
+```
+{
+  "id": "c7055826-b23b-41d5-8026-951f0c424751",
+  "message": "New entry added to the data store with id - c7055826-b23b-41d5-8026-951f0c424751"
+}
+```
 ### GET Requests
 A GET request will return the above JSON objects as an array with the addition of an extra field - id, which is a unique id of that particular report.
 The JSON Schema for GET responses can be found in the schemas folder.
@@ -43,7 +50,7 @@ An example of a GET response is:
 ### Directory Structure
 `scripts` directory contains helper scripts to send POST and GET requests to the server, assuming the server listens on default port 4000.
 `cmd` and `pkg` directories contain source code.
-`schemas` directory contains schemas for GET responses and POST requests.
+`schemas` directory contains schemas for GET responses and POST requests and responses.
 
 # Compiling
 In order to compile the solution, please run make in the root directory of this repository.

@@ -65,27 +65,30 @@ func (m *metricsHandler) handleGetRequest(responseWriter http.ResponseWriter, re
 	if allEntries == nil {
 		log.Println("ERROR: GET - could not get entries from the datastore")
 		http.Error(responseWriter, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	allEntriesAsBytes, err := json.MarshalIndent(allEntries, "", "  ") // for easier readability
+	if err != nil {
+		log.Printf("ERROR: GET - could not marshal entries as a byte array: %s\n", err.Error())
+		http.Error(responseWriter, "Error marshalling entries", http.StatusInternalServerError)
+		return
+	}
+
+	responseWriter.Header().Set("Content-Type", "application/json")
+
+	// the 200 header will be set automatically
+	_, err = responseWriter.Write(allEntriesAsBytes)
+
+	if err != nil {
+		log.Printf("ERROR: GET - could not write response: %s\n", err.Error())
+		http.Error(responseWriter, "Error writing response", http.StatusInternalServerError)
 	} else {
-		allEntriesAsBytes, err := json.MarshalIndent(allEntries, "", "  ") // for easier readability
-		if err != nil {
-			log.Printf("ERROR: GET - could not marshal entries as a byte array: %s\n", err.Error())
-			http.Error(responseWriter, "Error marshalling entries", http.StatusInternalServerError)
-		} else {
-			responseWriter.Header().Set("Content-Type", "application/json")
-
-			// the 200 header will be set automatically
-			_, err := responseWriter.Write(allEntriesAsBytes)
-
-			if err != nil {
-				log.Printf("ERROR: GET - could not write response: %s\n", err.Error())
-				http.Error(responseWriter, "Error writing response", http.StatusInternalServerError)
-			} else {
-				if m.Debug {
-					log.Printf("GET - sending response: %v\n", string(allEntriesAsBytes))
-				}
-			}
+		if m.Debug {
+			log.Printf("GET - sending response: %v\n", string(allEntriesAsBytes))
 		}
 	}
+
 }
 
 func (m *metricsHandler) handlePostRequest(responseWriter http.ResponseWriter, request *http.Request) {
@@ -142,16 +145,10 @@ func (m *metricsHandler) handlePostRequest(responseWriter http.ResponseWriter, r
 
 	// in a super rare case when the UUID is duplicate, generate another one
 	if rc == datastore.ErrorKeyExists {
-		machineMetrics.ID = uuid.New().String()
+		log.Printf("ERROR: POST - could not add entry to the datastore: error - %s, key - %s, value - %#v\n", rc.String(), machineMetrics.ID, machineMetrics)
+		http.Error(responseWriter, "Internal Server Error", http.StatusInternalServerError)
+		return
 
-		rc = m.MetricsDatastore.AddEntry(machineMetrics.ID, machineMetrics)
-
-		// if there is still an error, just return 500 regardless of error type
-		if rc != datastore.Success {
-			log.Printf("ERROR: POST - could not add entry to the datastore: error - %s, key - %s, value - %#v\n", rc.String(), machineMetrics.ID, machineMetrics)
-			http.Error(responseWriter, "Internal Server Error", http.StatusInternalServerError)
-			return
-		}
 	} else if rc != datastore.Success {
 		// if it's any other error, just return 500
 		log.Printf("ERROR: POST - could not add entry to the datastore: error - %s, key - %s, value - %#v\n", rc.String(), machineMetrics.ID, machineMetrics)

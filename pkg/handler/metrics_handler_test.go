@@ -467,7 +467,7 @@ func (s *MetricsHandlerTestSuite) Test_POST_CannotAddToDatastoreKeyExists_Return
 	s.respWriterMock.AssertCalled(s.T(), "Write", []byte(responseBody))
 	s.respWriterMock.AssertCalled(s.T(), "WriteHeader", http.StatusInternalServerError)
 
-	s.dstoreMock.AssertNumberOfCalls(s.T(), "AddEntry", 2)
+	s.dstoreMock.AssertNumberOfCalls(s.T(), "AddEntry", 1)
 }
 
 func (s *MetricsHandlerTestSuite) Test_POST_CannotAddToDatastoreKeyNotSpecified_Returns500() {
